@@ -1,10 +1,6 @@
 import streamlit as st
 import pandas as pd
 
-# ─────────────────────────────────────────────────────────────
-# INLINE SVG LOGOS
-# ─────────────────────────────────────────────────────────────
-
 MEESHO_LOGO_SVG = """
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 40" width="110" height="32">
   <defs>
@@ -31,96 +27,91 @@ AMAZON_LOGO_SVG = """
   <polygon points="84,27 90,30 84,33" fill="#FF9900"/>
 </svg>"""
 
-# ─────────────────────────────────────────────────────────────
-# PLOTLY LAYOUT
-# ─────────────────────────────────────────────────────────────
 PLOTLY_LAYOUT = dict(
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="rgba(0,0,0,0)",
-    font=dict(family="DM Sans, sans-serif", color="#64748B", size=12),
+    font=dict(family="Inter, Manrope, sans-serif", color="#8A94A6", size=12),
     margin=dict(l=10, r=10, t=32, b=10),
     xaxis=dict(
-        gridcolor="rgba(100,116,139,0.12)",
-        linecolor="rgba(100,116,139,0.2)",
-        tickcolor="rgba(100,116,139,0.2)",
-        tickfont=dict(color="#94A3B8", size=11),
+        gridcolor="rgba(46,58,78,0.5)",
+        linecolor="rgba(46,58,78,0.6)",
+        tickcolor="rgba(46,58,78,0.6)",
+        tickfont=dict(color="#8A94A6", size=11),
     ),
     yaxis=dict(
-        gridcolor="rgba(100,116,139,0.12)",
-        linecolor="rgba(100,116,139,0.2)",
-        tickcolor="rgba(100,116,139,0.2)",
-        tickfont=dict(color="#94A3B8", size=11),
+        gridcolor="rgba(46,58,78,0.5)",
+        linecolor="rgba(46,58,78,0.6)",
+        tickcolor="rgba(46,58,78,0.6)",
+        tickfont=dict(color="#8A94A6", size=11),
     ),
     legend=dict(
         bgcolor="rgba(0,0,0,0)",
-        bordercolor="rgba(100,116,139,0.2)",
-        font=dict(color="#64748B"),
+        bordercolor="rgba(46,58,78,0.5)",
+        font=dict(color="#8A94A6"),
     ),
 )
 
-ORANGE_PALETTE = ["#F97316","#FB923C","#FDBA74","#FED7AA","#FFF7ED",
-                  "#EA580C","#C2410C","#9A3412","#7C2D12"]
+ORANGE_PALETTE = ["#F8BE14","#FBCF4A","#FDDE7E","#C8A000","#A07C00",
+                  "#7A5F00","#FFF0B3","#E0B800","#FFE566"]
 
-MULTI_PALETTE  = ["#F97316","#38BDF8","#A78BFA","#34D399","#F472B6",
-                  "#FBBF24","#60A5FA","#4ADE80","#FB7185","#A3E635"]
-
-
-# ─────────────────────────────────────────────────────────────
-# THEME HELPERS
-# ─────────────────────────────────────────────────────────────
+MULTI_PALETTE  = ["#F8BE14","#8651CA","#94772B","#4E7CFF","#F65164",
+                  "#22C55E","#4E7CFF","#FBCF4A","#A07ADA","#4ADE80"]
 
 def _init_theme():
     if "dark_mode" not in st.session_state:
         st.session_state.dark_mode = True
 
-
 def _get_css(is_dark: bool) -> str:
     if is_dark:
         vars_block = """
-  --bg-primary:    #0F172A;
-  --bg-secondary:  #1E293B;
-  --bg-card:       #1E293B;
-  --border-color:  #1E3A5F;
-  --text-primary:  #F1F5F9;
-  --text-muted:    #64748B;
-  --text-sub:      #94A3B8;
-  --accent:        #F97316;
-  --accent-light:  rgba(249,115,22,0.15);
-  --accent-border: rgba(249,115,22,0.35);
+  --bg-primary:    #1A1F2E;
+  --bg-secondary:  #22293A;
+  --bg-card:       #22293A;
+  --border-color:  #2E3A4E;
+  --text-primary:  #F0EEE8;
+  --text-muted:    #8A94A6;
+  --text-sub:      #5C6680;
+  --accent:        #F8BE14;
+  --accent-secondary: #8651CA;
+  --accent-tertiary:  #94772B;
+  --accent-light:  rgba(248,190,20,0.15);
+  --accent-border: rgba(248,190,20,0.35);
   --green:         #22C55E;
   --red:           #EF4444;
-  --blue:          #38BDF8;
-  --sidebar-bg:    linear-gradient(180deg,#0A1628 0%,#0F172A 100%);
-  --shadow:        0 4px 24px rgba(0,0,0,0.4);
-  --chart-grid:    #1E3A5F;
-  --body-bg:       #0F172A;
-  --body-text:     #F1F5F9;
+  --blue:          #4E7CFF;
+  --sidebar-bg:    linear-gradient(180deg,#141828 0%,#1A1F2E 100%);
+  --shadow:        0 4px 24px rgba(0,0,0,0.5);
+  --chart-grid:    #2E3A4E;
+  --body-bg:       #1A1F2E;
+  --body-text:     #F0EEE8;
 """
     else:
         vars_block = """
-  --bg-primary:    #F8FAFC;
-  --bg-secondary:  #FFFFFF;
+  --bg-primary:    #EDEEF5;
+  --bg-secondary:  #F5F5FA;
   --bg-card:       #FFFFFF;
-  --border-color:  #E2E8F0;
-  --text-primary:  #0F172A;
-  --text-muted:    #64748B;
-  --text-sub:      #475569;
-  --accent:        #EA580C;
-  --accent-light:  rgba(234,88,12,0.10);
-  --accent-border: rgba(234,88,12,0.30);
+  --border-color:  #D8D9E8;
+  --text-primary:  #1A1B2E;
+  --text-muted:    #5C6680;
+  --text-sub:      #8A94A6;
+  --accent:        #4E7CFF;
+  --accent-secondary: #7033FF;
+  --accent-tertiary:  #F65164;
+  --accent-light:  rgba(78,124,255,0.12);
+  --accent-border: rgba(78,124,255,0.35);
   --green:         #16A34A;
-  --red:           #DC2626;
-  --blue:          #0284C7;
-  --sidebar-bg:    linear-gradient(180deg,#F1F5F9 0%,#E2E8F0 100%);
-  --shadow:        0 4px 12px rgba(0,0,0,0.08);
-  --chart-grid:    #E2E8F0;
-  --body-bg:       #F8FAFC;
-  --body-text:     #0F172A;
+  --red:           #F65164;
+  --blue:          #4E7CFF;
+  --sidebar-bg:    linear-gradient(180deg,#E8EAF2 0%,#EDEEF5 100%);
+  --shadow:        0 4px 12px rgba(26,27,46,0.10);
+  --chart-grid:    #D8D9E8;
+  --body-bg:       #EDEEF5;
+  --body-text:     #1A1B2E;
 """
-    
+
     return f"""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {{{vars_block}}}
 
@@ -128,7 +119,7 @@ def _get_css(is_dark: bool) -> str:
 *, *::before, *::after {{ box-sizing: border-box; }}
 
 html, body {{
-  font-family: 'DM Sans', sans-serif !important;
+  font-family: 'Inter', 'Manrope', sans-serif !important;
   background-color: var(--body-bg) !important;
   color: var(--body-text) !important;
 }}
@@ -139,7 +130,7 @@ html, body {{
 [data-testid="stAppViewContainer"] > .main {{
   background-color: var(--body-bg) !important;
   color: var(--body-text) !important;
-  font-family: 'DM Sans', sans-serif !important;
+  font-family: 'Inter', 'Manrope', sans-serif !important;
 }}
 
 .main .block-container {{
@@ -179,7 +170,7 @@ html, body {{
     padding: 12px 24px !important;
     border-radius: 50px !important;
     font-weight: 700 !important;
-    box-shadow: 0 4px 15px rgba(249,115,22,0.4) !important;
+    box-shadow: 0 4px 15px rgba(248,190,20,0.4) !important;
     text-decoration: none !important;
     display: flex !important;
     align-items: center !important;
@@ -188,7 +179,7 @@ html, body {{
 }}
 .st-next-btn a:hover {{
     transform: scale(1.08) translateY(-2px) !important;
-    box-shadow: 0 8px 25px rgba(249,115,22,0.5) !important;
+    box-shadow: 0 8px 25px rgba(248,190,20,0.5) !important;
 }}
 
 /* Sidebar Toggle Button Visibility Fix */
@@ -202,7 +193,7 @@ html, body {{
     border-radius: 50% !important;
     color: white !important;
     margin-left: 10px !important;
-    box-shadow: 0 4px 10px rgba(249,115,22,0.3) !important;
+    box-shadow: 0 4px 10px rgba(248,190,20,0.3) !important;
     width: 40px !important;
     height: 40px !important;
     display: flex !important;
@@ -211,7 +202,7 @@ html, body {{
 }}
 [data-testid="stHeader"] button:hover {{
     transform: scale(1.1) !important;
-    box-shadow: 0 6px 15px rgba(249,115,22,0.4) !important;
+    box-shadow: 0 6px 15px rgba(248,190,20,0.4) !important;
 }}
 
 [data-testid="stSidebar"] a[data-testid="stPageLink"] {{
@@ -239,9 +230,9 @@ html, body {{
   color: var(--accent) !important;
 }}
 [data-testid="stSidebar"] a[data-testid="stPageLink"][aria-current="page"] {{
-  background: linear-gradient(90deg, var(--accent), #FB923C) !important;
+  background: linear-gradient(90deg, var(--accent), #FBCF4A) !important;
   border-color: var(--accent) !important;
-  box-shadow: 0 4px 15px rgba(249,115,22,0.35) !important;
+  box-shadow: 0 4px 15px rgba(248,190,20,0.35) !important;
   transform: none !important;
 }}
 [data-testid="stSidebar"] a[data-testid="stPageLink"][aria-current="page"] *,
@@ -263,7 +254,7 @@ html, body {{
   border: 1px solid var(--border-color) !important;
   border-radius: 10px !important;
   color: var(--text-primary) !important;
-  font-family: 'DM Sans', sans-serif !important;
+  font-family: 'Inter', 'Manrope', sans-serif !important;
   font-weight: 600 !important;
   font-size: 0.85rem !important;
   padding: 8px 14px !important;
@@ -307,7 +298,7 @@ html, body {{
 .dash-header::before {{
   content: '';
   position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--accent), #FB923C, #FBBF24);
+  background: linear-gradient(90deg, var(--accent), #FBCF4A, #8651CA);
 }}
 .dash-header h1 {{
   font-size: clamp(1.3rem, 4vw, 2rem) !important;
@@ -353,12 +344,12 @@ html, body {{
 .kpi-card:hover {{
   transform: translateY(-3px);
   border-color: var(--accent);
-  box-shadow: 0 8px 32px rgba(249,115,22,0.18);
+  box-shadow: 0 8px 32px rgba(248,190,20,0.18);
 }}
 .kpi-card::after {{
   content: '';
   position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--accent), #FB923C);
+  background: linear-gradient(90deg, var(--accent), #FBCF4A);
   transform: scaleX(0); transform-origin: left;
   transition: transform 0.3s;
 }}
@@ -477,23 +468,17 @@ html, body {{
 </style>
 """
 
-
 def inject_css():
     _init_theme()
     is_dark = st.session_state.get("dark_mode", True)
     st.markdown(_get_css(is_dark), unsafe_allow_html=True)
 
-
-# ─────────────────────────────────────────────────────────────
-# SIDEBAR
-# ─────────────────────────────────────────────────────────────
-
 def sidebar_brand():
     st.markdown(f"""
     <div style="padding:14px 0 14px">
-      <div style="font-size:1.3rem;font-weight:900;color:var(--text-primary,#F1F5F9);
-                  letter-spacing:-0.5px;margin-bottom:4px;">🛒 EcomIQ</div>
-      <div style="color:var(--text-muted,#64748B);font-size:0.72rem;margin-bottom:14px;">
+      <div style="font-size:1.3rem;font-weight:900;color:var(--text-primary,#F0EEE8);
+                  letter-spacing:-0.5px;margin-bottom:4px;">\U0001F6D2 EcomIQ</div>
+      <div style="color:var(--text-muted,#8A94A6);font-size:0.72rem;margin-bottom:14px;">
         Sales &amp; ML Analytics Platform
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
@@ -501,9 +486,8 @@ def sidebar_brand():
         {AMAZON_LOGO_SVG}
       </div>
     </div>
-    <hr style="border-color:var(--border-color,#1E3A5F);margin-bottom:14px">
+    <hr style="border-color:var(--border-color,#2E3A4E);margin-bottom:14px">
     """, unsafe_allow_html=True)
-
 
 def sidebar_nav():
     """Centralized sidebar navigation with dark/light mode toggle."""
@@ -512,82 +496,62 @@ def sidebar_nav():
     with st.sidebar:
         sidebar_brand()
 
-        # ── Theme toggle ──────────────────────────────────
         is_dark = st.session_state.get("dark_mode", True)
-        toggle_label = "☀️ Switch to Light Mode" if is_dark else "🌙 Switch to Dark Mode"
+        toggle_label = "\u2600\uFE0F Switch to Light Mode" if is_dark else "\U0001F319 Switch to Dark Mode"
 
         if st.button(toggle_label, key="theme_toggle_btn", use_container_width=True):
             st.session_state.dark_mode = not st.session_state.dark_mode
             st.rerun()
 
-        st.markdown('<hr style="border-color:var(--border-color,#1E3A5F);margin:12px 0">', unsafe_allow_html=True)
+        st.markdown('<hr style="border-color:var(--border-color,#2E3A4E);margin:12px 0">', unsafe_allow_html=True)
 
-        # ── Nav links ─────────────────────────────────────
         st.markdown(
-            '<div style="color:var(--text-muted,#64748B);font-size:0.7rem;font-weight:700;'
+            '<div style="color:var(--text-muted,#8A94A6);font-size:0.7rem;font-weight:700;'
             'text-transform:uppercase;letter-spacing:1.5px;margin:0 0 8px 2px;">Navigation</div>',
             unsafe_allow_html=True
         )
 
-        st.page_link("Home.py",               label="🏠 Home Dashboard")
-        st.page_link("pages/1_Meesho.py",     label="🛍️ Meesho Stats")
-        st.page_link("pages/2_Amazon.py",     label="📦 Amazon Stats")
-        st.page_link("pages/3_ML_Models.py",  label="🦾 ML Models")
-        st.page_link("pages/4_Customer.py",   label="📊 Customer Trends")
-        st.page_link("pages/5_Prediction.py", label="🔮 Live Predictor")
+        st.page_link("Home.py",               label="\U0001F3E0 Home Dashboard")
+        st.page_link("pages/1_Meesho.py",     label="\U0001F6CD\uFE0F Meesho Stats")
+        st.page_link("pages/2_Amazon.py",     label="\U0001F4E6 Amazon Stats")
+        st.page_link("pages/3_ML_Models.py",  label="\U0001F9BE ML Models")
+        st.page_link("pages/4_Customer.py",   label="\U0001F4CA Customer Trends")
+        st.page_link("pages/5_Prediction.py", label="\U0001F52E Live Predictor")
 
-        st.markdown('<hr style="border-color:var(--border-color,#1E3A5F);margin:14px 0 8px">', unsafe_allow_html=True)
+        st.markdown('<hr style="border-color:var(--border-color,#2E3A4E);margin:14px 0 8px">', unsafe_allow_html=True)
         st.markdown(
-            '<div style="color:var(--text-muted,#64748B);font-size:0.65rem;text-align:center;">'
+            '<div style="color:var(--text-muted,#8A94A6);font-size:0.65rem;text-align:center;">'
             'BSc Data Science · 2025–26</div>',
             unsafe_allow_html=True
         )
 
-    # ── Floating Next Page Button ─────────────────────────────
-    # Determine Page Sequence
     nav_order = [
-        ("Home.py", "🏠 Home"),
-        ("pages/1_Meesho.py", "🛍️ Meesho Stats"),
-        ("pages/2_Amazon.py", "📦 Amazon Stats"),
-        ("pages/3_ML_Models.py", "🦾 ML Models"),
-        ("pages/4_Customer.py", "📊 Customer Trends"),
-        ("pages/5_Prediction.py", "🔮 Live Predictor")
+        ("Home.py", "\U0001F3E0 Home"),
+        ("pages/1_Meesho.py", "\U0001F6CD\uFE0F Meesho Stats"),
+        ("pages/2_Amazon.py", "\U0001F4E6 Amazon Stats"),
+        ("pages/3_ML_Models.py", "\U0001F9BE ML Models"),
+        ("pages/4_Customer.py", "\U0001F4CA Customer Trends"),
+        ("pages/5_Prediction.py", "\U0001F52E Live Predictor")
     ]
-    
-    # Try to determine current page
+
     current_page = "Home.py"
     try:
         import os
-        # Streamlit doesn't give clean script access, but we can check session state or script path
-        # In this specific app structure, we can check which buttons are likely active
-        # But a safer way is to use st.session_state to track page changes if they were custom.
-        # Since they are st.page_link, Streamlit handles it.
-        # We'll use a hack to check the caller
         import inspect
         caller_path = inspect.stack()[1].filename
         current_page_file = os.path.basename(caller_path)
-        
-        # Match with our list
+
         for i, (f, label) in enumerate(nav_order):
             if os.path.basename(f) == current_page_file:
-                # Found current, get next
                 next_idx = (i + 1) % len(nav_order)
                 next_f, next_label = nav_order[next_idx]
-                
-                # Show floating button
+
                 st.markdown('<div class="next-button-container st-next-btn">', unsafe_allow_html=True)
                 st.page_link(next_f, label=f"Next: {next_label} →")
                 st.markdown('</div>', unsafe_allow_html=True)
                 break
     except Exception as e:
-        # Fallback if detection fails
         pass
-
-
-
-# ─────────────────────────────────────────────────────────────
-# UI HELPERS
-# ─────────────────────────────────────────────────────────────
 
 def header(title: str, subtitle: str, badge: str = "", logo: str = ""):
     badge_html = f'<div class="dash-badge">{badge}</div>' if badge else ""
@@ -601,7 +565,6 @@ def header(title: str, subtitle: str, badge: str = "", logo: str = ""):
 <p>{subtitle}</p>
 </div>""", unsafe_allow_html=True)
 
-
 def kpi_card(icon: str, label: str, value: str, sub: str = "", delta: str = "", delta_pos: bool = True):
     delta_class = "kpi-delta-pos" if delta_pos else "kpi-delta-neg"
     delta_html  = f'<div class="{delta_class}">{delta}</div>' if delta else ""
@@ -613,17 +576,14 @@ def kpi_card(icon: str, label: str, value: str, sub: str = "", delta: str = "", 
     {sub_html}{delta_html}
 </div>"""
 
-
 def kpi_row(cards: list):
     st.markdown('<div class="kpi-grid">' + "".join(cards) + '</div>', unsafe_allow_html=True)
-
 
 def section(title: str):
     st.markdown(
         f'<div class="section-title"><span class="dot"></span>{title}</div>',
         unsafe_allow_html=True
     )
-
 
 def chart_card(fig, title: str = ""):
     title_html = (

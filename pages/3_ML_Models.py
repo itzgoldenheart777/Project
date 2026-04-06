@@ -15,22 +15,20 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 
-st.set_page_config(page_title="ML Model Training", page_icon="🤖", layout="wide")
+st.set_page_config(page_title="ML Model Training", page_icon="\U0001F916", layout="wide")
 inject_css()
 
 sidebar_nav()
 with st.sidebar:
-    st.markdown('<hr style="border-color:#1E3A5F;margin:16px 0 12px">', unsafe_allow_html=True)
+    st.markdown('<hr style="border-color:#2E3A4E;margin:16px 0 12px">', unsafe_allow_html=True)
     st.markdown('<div style="color:var(--text-muted);font-size:0.72rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Training Config</div>', unsafe_allow_html=True)
     test_size  = st.slider("Test Set Size", 0.1, 0.4, 0.2, 0.05, help="Fraction of data for testing")
     run_btn    = st.button("▶  Run Training", use_container_width=True, type="primary")
-
 
 header("ML Model Training & Evaluation",
        "Train Logistic Regression, Decision Tree & Random Forest — compare accuracy, precision, recall & F1",
        "Machine Learning")
 
-# ── Load + prepare ────────────────────────────────────────────
 @st.cache_data
 def load_data():
     df = pd.read_csv("data/Amazon Sale Report.csv", low_memory=False)
@@ -45,18 +43,16 @@ def load_data():
 
 raw = load_data()
 
-# ── Info banner ───────────────────────────────────────────────
 kpi_row([
-    kpi_card("📊","Total Records",   f"{len(raw):,}"),
-    kpi_card("🎯","Features Used",   "6"),
-    kpi_card("🏷️","Target Classes", f"{raw['Status'].nunique()}"),
-    kpi_card("🔀","Train Split",     f"{int((1-test_size)*100)}%"),
-    kpi_card("🧪","Test Split",      f"{int(test_size*100)}%"),
+    kpi_card("\U0001F4CA","Total Records",   f"{len(raw):,}"),
+    kpi_card("\U0001F3AF","Features Used",   "6"),
+    kpi_card("\U0001F3F7\uFE0F","Target Classes", f"{raw['Status'].nunique()}"),
+    kpi_card("\U0001F500","Train Split",     f"{int((1-test_size)*100)}%"),
+    kpi_card("\U0001F9EA","Test Split",      f"{int(test_size*100)}%"),
 ])
 
 st.markdown('<hr class="dash-divider">', unsafe_allow_html=True)
 
-# ── Feature overview ──────────────────────────────────────────
 section("Dataset & Feature Engineering")
 c1, c2 = st.columns([1.2, 1])
 with c1:
@@ -76,20 +72,18 @@ with c2:
         orientation="h",
         marker=dict(color=MULTI_PALETTE[:len(status_dist)]),
         text=status_dist["Count"].apply(lambda x: f"{x:,}"),
-        textposition="outside", textfont=dict(color="#94A3B8", size=10),
+        textposition="outside", textfont=dict(color="#8A94A6", size=10),
     ))
     fig_sd.update_layout(**PLOTLY_LAYOUT)
     fig_sd.update_layout(height=230, yaxis_categoryorder="total ascending", yaxis_tickfont_size=9,
                          title_text="Target Class Distribution",
-                         title_font=dict(color="#94A3B8", size=12))
+                         title_font=dict(color="#8A94A6", size=12))
     st.plotly_chart(fig_sd, use_container_width=True, config={"displayModeBar": False})
 
 st.markdown('<hr class="dash-divider">', unsafe_allow_html=True)
 
-# ── TRAIN ─────────────────────────────────────────────────────
 if run_btn or "ml_results" in st.session_state:
     if run_btn:
-        # prepare
         data = raw.copy()
         le_cat = LabelEncoder(); le_ful = LabelEncoder(); le_status = LabelEncoder()
         data["Category"]  = le_cat.fit_transform(data["Category"])
@@ -123,7 +117,6 @@ if run_btn or "ml_results" in st.session_state:
         best_name = res_df.sort_values("Accuracy", ascending=False).iloc[0]["Model"]
         best_model, best_preds = trained[best_name]
 
-        # feature importance
         fi = None
         if hasattr(best_model, "feature_importances_"):
             fi = pd.DataFrame({
@@ -140,7 +133,6 @@ if run_btn or "ml_results" in st.session_state:
             "le_status": le_status,
         }
 
-    # ── Display results ───────────────────────────────────────
     r = st.session_state["ml_results"]
     res_df    = r["res_df"]
     best_name = r["best_name"]
@@ -150,17 +142,15 @@ if run_btn or "ml_results" in st.session_state:
 
     section("Model Performance Comparison")
 
-    # Metric cards for best model
     best_row = res_df[res_df["Model"] == best_name].iloc[0]
     kpi_row([
-        kpi_card("🏆","Best Model",   best_name),
-        kpi_card("🎯","Accuracy",     f"{best_row['Accuracy']:.2%}"),
-        kpi_card("📐","Precision",    f"{best_row['Precision']:.2%}"),
-        kpi_card("📡","Recall",       f"{best_row['Recall']:.2%}"),
-        kpi_card("⚖️","F1 Score",    f"{best_row['F1 Score']:.2%}"),
+        kpi_card("\U0001F3C6","Best Model",   best_name),
+        kpi_card("\U0001F3AF","Accuracy",     f"{best_row['Accuracy']:.2%}"),
+        kpi_card("\U0001F4D0","Precision",    f"{best_row['Precision']:.2%}"),
+        kpi_card("\U0001F4E1","Recall",       f"{best_row['Recall']:.2%}"),
+        kpi_card("\u2696\uFE0F","F1 Score",    f"{best_row['F1 Score']:.2%}"),
     ])
 
-    # Table + radar
     c1, c2 = st.columns([1.1, 1])
     with c1:
         disp = res_df.copy()
@@ -171,7 +161,7 @@ if run_btn or "ml_results" in st.session_state:
     with c2:
         metrics = ["Accuracy","Precision","Recall","F1 Score"]
         fig_radar = go.Figure()
-        colors = ["#F97316","#38BDF8","#A78BFA"]
+        colors = ["#F8BE14","#4E7CFF","#8651CA"]
         fill_colors = ["rgba(249, 115, 22, 0.15)", "rgba(56, 189, 248, 0.15)", "rgba(167, 139, 250, 0.15)"]
         for i, row in res_df.iterrows():
             vals = [row[m] for m in metrics]
@@ -185,9 +175,9 @@ if run_btn or "ml_results" in st.session_state:
         fig_radar.update_layout(**PLOTLY_LAYOUT, height=280,
                                 polar=dict(
                                     bgcolor="rgba(0,0,0,0)",
-                                    angularaxis=dict(tickfont=dict(color="#94A3B8", size=10), linecolor="#1E3A5F"),
-                                    radialaxis=dict(tickfont=dict(color="#64748B", size=9), gridcolor="#1E3A5F",
-                                                    range=[0,1], linecolor="#1E3A5F"),
+                                    angularaxis=dict(tickfont=dict(color="#8A94A6", size=10), linecolor="#2E3A4E"),
+                                    radialaxis=dict(tickfont=dict(color="#8A94A6", size=9), gridcolor="#2E3A4E",
+                                                    range=[0,1], linecolor="#2E3A4E"),
                                 ))
         st.plotly_chart(fig_radar, use_container_width=True, config={"displayModeBar": False})
 
@@ -195,10 +185,10 @@ if run_btn or "ml_results" in st.session_state:
     section("Accuracy Bar Comparison")
     fig_bar = go.Figure(go.Bar(
         x=res_df["Model"], y=res_df["Accuracy"],
-        marker=dict(color=["#F97316" if n == best_name else "#2D4A7A" for n in res_df["Model"]],
+        marker=dict(color=["#F8BE14" if n == best_name else "#3A2E6E" for n in res_df["Model"]],
                     line=dict(color="rgba(0,0,0,0)")),
         text=res_df["Accuracy"].map(lambda x: f"{x:.2%}"),
-        textposition="outside", textfont=dict(color="#F1F5F9", size=12),
+        textposition="outside", textfont=dict(color="#F0EEE8", size=12),
     ))
     fig_bar.update_layout(**PLOTLY_LAYOUT, height=250,
                           yaxis_tickformat=".0%", yaxis_range=[0, 1.15])
@@ -206,7 +196,6 @@ if run_btn or "ml_results" in st.session_state:
 
     st.markdown('<hr class="dash-divider">', unsafe_allow_html=True)
 
-    # ── Confusion matrix + feature importance ─────────────────
     ca, cb = st.columns(2)
     with ca:
         section("Confusion Matrix")
@@ -214,7 +203,7 @@ if run_btn or "ml_results" in st.session_state:
         cm_small = cm[:max_display, :max_display]
         cls_small = classes[:max_display]
         fig_cm = px.imshow(cm_small, x=cls_small, y=cls_small,
-                           color_continuous_scale=[[0,"#0F172A"],[0.5,"#1E3A5F"],[1,"#F97316"]],
+                           color_continuous_scale=[[0,"#141828"],[0.5,"#2E3A4E"],[1,"#F8BE14"]],
                            text_auto=True, aspect="auto")
         fig_cm.update_layout(**PLOTLY_LAYOUT, height=320,
                              coloraxis_showscale=False,
@@ -231,7 +220,7 @@ if run_btn or "ml_results" in st.session_state:
                 orientation="h",
                 marker=dict(color=ORANGE_PALETTE[:len(fi)]),
                 text=fi["Importance"].map(lambda x: f"{x:.3f}"),
-                textposition="outside", textfont=dict(color="#94A3B8", size=10),
+                textposition="outside", textfont=dict(color="#8A94A6", size=10),
             ))
             fig_fi.update_layout(**PLOTLY_LAYOUT)
             fig_fi.update_layout(height=320, yaxis_categoryorder="total ascending")
@@ -241,8 +230,8 @@ if run_btn or "ml_results" in st.session_state:
 
 else:
     st.markdown("""
-    <div style="text-align:center;padding:60px;background:#1E293B;border:1px dashed #1E3A5F;border-radius:16px;margin-top:20px">
-        <div style="font-size:3rem;margin-bottom:16px">🤖</div>
-        <div style="color:#F1F5F9;font-size:1.1rem;font-weight:600;margin-bottom:8px">Ready to Train</div>
-        <div style="color:#64748B;font-size:0.875rem">Click <b style="color:#F97316">▶ Run Training</b> in the sidebar to start ML model comparison</div>
+    <div style="text-align:center;padding:60px;background:#22293A;border:1px dashed #2E3A4E;border-radius:16px;margin-top:20px">
+        <div style="font-size:3rem;margin-bottom:16px">\U0001F916</div>
+        <div style="color:#F0EEE8;font-size:1.1rem;font-weight:600;margin-bottom:8px">Ready to Train</div>
+        <div style="color:#8A94A6;font-size:0.875rem">Click <b style="color:#F8BE14">▶ Run Training</b> in the sidebar to start ML model comparison</div>
     </div>""", unsafe_allow_html=True)

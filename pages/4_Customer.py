@@ -6,11 +6,10 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from utils import *
 
-st.set_page_config(page_title="Customer Behaviour", page_icon="👥", layout="wide")
+st.set_page_config(page_title="Customer Behaviour", page_icon="\U0001F465", layout="wide")
 inject_css()
 
 sidebar_nav()
-
 
 header("Customer Behaviour Analysis",
        "Survey insights from Google Forms — demographics, shopping habits, satisfaction & returns",
@@ -24,7 +23,6 @@ def load():
 
 df = load()
 
-# ── Column mapping (robust – match by substrings) ─────────────
 def find_col(df, keywords):
     for col in df.columns:
         cl = col.lower()
@@ -49,15 +47,14 @@ COL = {
 }
 
 kpi_row([
-    kpi_card("📋","Total Responses",  f"{len(df)}"),
-    kpi_card("📊","Survey Questions", f"{len(df.columns)-1}"),
-    kpi_card("📅","Data Source",      "Google Forms"),
-    kpi_card("🔍","Analysis Type",    "Primary Data"),
+    kpi_card("\U0001F4CB","Total Responses",  f"{len(df)}"),
+    kpi_card("\U0001F4CA","Survey Questions", f"{len(df.columns)-1}"),
+    kpi_card("\U0001F4C5","Data Source",      "Google Forms"),
+    kpi_card("\U0001F50D","Analysis Type",    "Primary Data"),
 ])
 
 st.markdown('<hr class="dash-divider">', unsafe_allow_html=True)
 
-# ── helpers ───────────────────────────────────────────────────
 def donut(col_key, title):
     col = COL.get(col_key)
     if not col or col not in df.columns: return
@@ -66,11 +63,11 @@ def donut(col_key, title):
     fig = px.pie(data, names="Label", values="Count",
                  color_discrete_sequence=MULTI_PALETTE, hole=0.55)
     fig.update_traces(textposition="outside", textfont_size=10,
-                      marker=dict(line=dict(color="#0F172A", width=2)))
+                      marker=dict(line=dict(color="#141828", width=2)))
     layout = PLOTLY_LAYOUT.copy()
     layout.update({"height": 280,
                    "title_text": title,
-                   "title_font": dict(color="#94A3B8", size=12),
+                   "title_font": dict(color="#8A94A6", size=12),
                    "legend": dict(font=dict(size=9))})
     fig.update_layout(**layout)
     st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
@@ -90,15 +87,14 @@ def hbar(col_key, title, multi=False):
         orientation="h",
         marker=dict(color=ORANGE_PALETTE[:len(data)]),
         text=data["Count"], textposition="outside",
-        textfont=dict(color="#94A3B8", size=10),
+        textfont=dict(color="#8A94A6", size=10),
     ))
     fig.update_layout(**PLOTLY_LAYOUT)
     fig.update_layout(height=280, yaxis_categoryorder="total ascending", yaxis_tickfont_size=10,
-                      title_text=title, title_font=dict(color="#94A3B8", size=12))
+                      title_text=title, title_font=dict(color="#8A94A6", size=12))
     st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
-# ── Section 1: Demographics ───────────────────────────────────
-section("👤 Demographics")
+section("\U0001F464 Demographics")
 c1, c2, c3 = st.columns(3)
 with c1: donut("gender",  "Gender Distribution")
 with c2: donut("student", "Student vs Non-Student")
@@ -106,16 +102,14 @@ with c3: donut("freq",    "Shopping Frequency")
 
 st.markdown('<hr class="dash-divider">', unsafe_allow_html=True)
 
-# ── Section 2: Platform & Product Prefs ──────────────────────
-section("🛒 Platform & Product Preferences")
+section("\U0001F6D2 Platform & Product Preferences")
 c1, c2 = st.columns(2)
 with c1: hbar("platforms", "Platforms Used (Multi-select)", multi=True)
 with c2: hbar("products",  "Products Purchased (Multi-select)", multi=True)
 
 st.markdown('<hr class="dash-divider">', unsafe_allow_html=True)
 
-# ── Section 3: Spending & Reviews ─────────────────────────────
-section("💰 Spending & Decision Behaviour")
+section("\U0001F4B0 Spending & Decision Behaviour")
 c1, c2, c3 = st.columns(3)
 with c1: donut("spending", "Avg Spending Per Order")
 with c2: donut("reviews",  "Check Reviews Before Buying?")
@@ -123,8 +117,7 @@ with c3: donut("delivery", "Preferred Delivery Option")
 
 st.markdown('<hr class="dash-divider">', unsafe_allow_html=True)
 
-# ── Section 4: Cancellation & Satisfaction ────────────────────
-section("📦 Delivery Experience & Satisfaction")
+section("\U0001F4E6 Delivery Experience & Satisfaction")
 c1, c2 = st.columns([1,1.5])
 with c1: donut("cancel",  "Faced Cancellation / RTO?")
 with c2: hbar("ret_reason","Reasons for Returns (Multi-select)", multi=True)
@@ -135,13 +128,11 @@ with c4: donut("returns",   "Do You Return Products Often?")
 
 st.markdown('<hr class="dash-divider">', unsafe_allow_html=True)
 
-# ── Section 5: Why online? ────────────────────────────────────
-section("🎯 Main Reason for Online Shopping")
+section("\U0001F3AF Main Reason for Online Shopping")
 hbar("reason_why", "Primary Reason Customers Shop Online")
 
-# ── Raw data ──────────────────────────────────────────────────
 st.markdown('<hr class="dash-divider">', unsafe_allow_html=True)
 section("Raw Survey Data")
-with st.expander("📄 View survey responses"):
+with st.expander("\U0001F4C4 View survey responses"):
     st.dataframe(df, height=320, use_container_width=True)
     st.caption(f"{len(df)} responses · {len(df.columns)} questions")

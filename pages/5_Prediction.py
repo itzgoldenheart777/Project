@@ -9,17 +9,15 @@ from utils import *
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 
-st.set_page_config(page_title="Order Prediction", page_icon="🔮", layout="wide")
+st.set_page_config(page_title="Order Prediction", page_icon="\U0001F52E", layout="wide")
 inject_css()
 
 sidebar_nav()
-
 
 header("Order Status Prediction",
        "Enter order details to predict delivery outcome using Random Forest ML model",
        "Live Prediction")
 
-# ── Train model (cached) ──────────────────────────────────────
 @st.cache_resource
 def build_model():
     df = pd.read_csv("data/Amazon Sale Report.csv", low_memory=False)
@@ -46,31 +44,28 @@ def build_model():
 
 model, le_cat, le_ful, le_status, df = build_model()
 
-# ── Status color map ──────────────────────────────────────────
 STATUS_STYLE = {
-    "Shipped - Delivered to Buyer":    ("✅", "#22C55E", "Order successfully delivered to the buyer."),
-    "Shipped":                         ("🚚", "#38BDF8", "Order is in transit and on the way."),
-    "Cancelled":                       ("❌", "#EF4444", "Order was cancelled before delivery."),
-    "Shipped - Returned to Seller":    ("🔄", "#F97316", "Order was shipped back to the seller."),
-    "Pending":                         ("⏳", "#FBBF24", "Order is pending processing."),
-    "Pending - Waiting for Pick Up":   ("📦", "#A78BFA", "Waiting for courier pickup."),
-    "Shipped - Returning to Seller":   ("↩️", "#F472B6", "Order is on its way back to seller."),
-    "Shipped - Out for Delivery":      ("🛵", "#4ADE80", "Out for delivery — arriving soon!"),
+    "Shipped - Delivered to Buyer":    ("\u2705", "#22C55E", "Order successfully delivered to the buyer."),
+    "Shipped":                         ("\U0001F69A", "#4E7CFF", "Order is in transit and on the way."),
+    "Cancelled":                       ("\u274C", "#EF4444", "Order was cancelled before delivery."),
+    "Shipped - Returned to Seller":    ("\U0001F504", "#F8BE14", "Order was shipped back to the seller."),
+    "Pending":                         ("\u23F3", "#F8BE14", "Order is pending processing."),
+    "Pending - Waiting for Pick Up":   ("\U0001F4E6", "#8651CA", "Waiting for courier pickup."),
+    "Shipped - Returning to Seller":   ("\u21A9\uFE0F", "#F472B6", "Order is on its way back to seller."),
+    "Shipped - Out for Delivery":      ("\U0001F6F5", "#4ADE80", "Out for delivery — arriving soon!"),
 }
-DEFAULT_STYLE = ("📋", "#94A3B8", "Order status determined.")
+DEFAULT_STYLE = ("\U0001F4CB", "#8A94A6", "Order status determined.")
 
-# ── Layout ────────────────────────────────────────────────────
 kpi_row([
-    kpi_card("📊","Training Records", f"{len(df):,}"),
-    kpi_card("🤖","Algorithm",        "Random Forest"),
-    kpi_card("🌳","Estimators",       "100 trees"),
-    kpi_card("🎯","Features",         "6 input features"),
-    kpi_card("🏷️","Output Classes",  f"{le_status.classes_.shape[0]}"),
+    kpi_card("\U0001F4CA","Training Records", f"{len(df):,}"),
+    kpi_card("\U0001F916","Algorithm",        "Random Forest"),
+    kpi_card("\U0001F333","Estimators",       "100 trees"),
+    kpi_card("\U0001F3AF","Features",         "6 input features"),
+    kpi_card("\U0001F3F7\uFE0F","Output Classes",  f"{le_status.classes_.shape[0]}"),
 ])
 
 st.markdown('<hr class="dash-divider">', unsafe_allow_html=True)
 
-# ── Input form ────────────────────────────────────────────────
 section("Enter Order Details")
 
 col_form, col_result = st.columns([1, 1])
@@ -79,20 +74,20 @@ with col_form:
     cats_available = sorted(le_cat.classes_.tolist())
     fuls_available = sorted(le_ful.classes_.tolist())
 
-    category   = st.selectbox("📁 Product Category", cats_available)
-    fulfilment = st.selectbox("🏭 Fulfilment Method", fuls_available)
-    qty        = st.number_input("📦 Quantity (units)", min_value=1, max_value=50, value=1, step=1)
-    amount     = st.number_input("💰 Order Amount (₹)", min_value=1.0, max_value=50000.0, value=599.0, step=50.0)
-    month      = st.select_slider("📅 Order Month",
+    category   = st.selectbox("\U0001F4C1 Product Category", cats_available)
+    fulfilment = st.selectbox("\U0001F3ED Fulfilment Method", fuls_available)
+    qty        = st.number_input("\U0001F4E6 Quantity (units)", min_value=1, max_value=50, value=1, step=1)
+    amount     = st.number_input("\U0001F4B0 Order Amount (₹)", min_value=1.0, max_value=50000.0, value=599.0, step=50.0)
+    month      = st.select_slider("\U0001F4C5 Order Month",
                                    options=list(range(1, 13)),
                                    value=6,
                                    format_func=lambda m: ["Jan","Feb","Mar","Apr","May","Jun",
                                                            "Jul","Aug","Sep","Oct","Nov","Dec"][m-1])
 
     order_value = qty * amount
-    st.markdown(f'<div style="background:#1E293B;border:1px solid #1E3A5F;border-radius:10px;padding:12px 16px;margin-top:4px;color:#F1F5F9"><span style="color:#64748B;font-size:0.8rem">Computed Order Value → </span><b style="color:#F97316">₹{order_value:,.2f}</b></div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="background:#22293A;border:1px solid #2E3A4E;border-radius:10px;padding:12px 16px;margin-top:4px;color:#F0EEE8"><span style="color:#8A94A6;font-size:0.8rem">Computed Order Value → </span><b style="color:#F8BE14">₹{order_value:,.2f}</b></div>', unsafe_allow_html=True)
 
-    predict_btn = st.button("🔮  Predict Order Status", use_container_width=True, type="primary")
+    predict_btn = st.button("\U0001F52E  Predict Order Status", use_container_width=True, type="primary")
 
 with col_result:
     if predict_btn:
@@ -108,23 +103,22 @@ with col_result:
         icon, color, message = STATUS_STYLE.get(status, DEFAULT_STYLE)
 
         st.markdown(f"""
-        <div style="background:linear-gradient(135deg,#1E293B,#0F2744);
+        <div style="background:linear-gradient(135deg,#22293A,#1A1F2E);
                     border:1px solid {color};border-radius:16px;
                     padding:32px;text-align:center;margin-top:8px">
             <div style="font-size:3rem;margin-bottom:12px">{icon}</div>
-            <div style="color:#64748B;font-size:0.8rem;letter-spacing:1px;
+            <div style="color:#8A94A6;font-size:0.8rem;letter-spacing:1px;
                         text-transform:uppercase;margin-bottom:8px">Predicted Status</div>
             <div style="color:{color};font-size:1.35rem;font-weight:700;
                         margin-bottom:12px;line-height:1.3">{status}</div>
-            <div style="color:#94A3B8;font-size:0.85rem;margin-bottom:20px">{message}</div>
+            <div style="color:#8A94A6;font-size:0.85rem;margin-bottom:20px">{message}</div>
             <div style="background:rgba(0,0,0,0.3);border-radius:10px;padding:10px 16px;
                         display:inline-block">
-                <span style="color:#64748B;font-size:0.75rem">Model Confidence</span>
-                <span style="color:#F1F5F9;font-size:1.2rem;font-weight:700;margin-left:10px">{confidence:.1f}%</span>
+                <span style="color:#8A94A6;font-size:0.75rem">Model Confidence</span>
+                <span style="color:#F0EEE8;font-size:1.2rem;font-weight:700;margin-left:10px">{confidence:.1f}%</span>
             </div>
         </div>""", unsafe_allow_html=True)
 
-        # Probability breakdown chart
         st.markdown('<div style="margin-top:20px">', unsafe_allow_html=True)
         section("Probability Breakdown (Top 6)")
         top_n = 6
@@ -136,11 +130,11 @@ with col_result:
         fig = go.Figure(go.Bar(
             x=top_probs, y=top_short, orientation="h",
             marker=dict(
-                color=["#F97316" if l == status else "#1E3A5F" for l in top_labels],
+                color=["#F8BE14" if l == status else "#2E3A4E" for l in top_labels],
                 line=dict(color="rgba(0,0,0,0)")
             ),
             text=[f"{p:.1f}%" for p in top_probs],
-            textposition="outside", textfont=dict(color="#94A3B8", size=10),
+            textposition="outside", textfont=dict(color="#8A94A6", size=10),
         ))
         fig.update_layout(**PLOTLY_LAYOUT)
         fig.update_layout(height=260, yaxis_categoryorder="total ascending", yaxis_tickfont_size=10, xaxis_ticksuffix="%")
@@ -149,20 +143,19 @@ with col_result:
 
     else:
         st.markdown("""
-        <div style="background:#1E293B;border:1px dashed #1E3A5F;border-radius:16px;
+        <div style="background:#22293A;border:1px dashed #2E3A4E;border-radius:16px;
                     padding:60px 30px;text-align:center;margin-top:8px">
-            <div style="font-size:3rem;margin-bottom:16px">🔮</div>
-            <div style="color:#F1F5F9;font-weight:600;font-size:1rem;margin-bottom:8px">
+            <div style="font-size:3rem;margin-bottom:16px">\U0001F52E</div>
+            <div style="color:#F0EEE8;font-weight:600;font-size:1rem;margin-bottom:8px">
                 Awaiting Prediction</div>
-            <div style="color:#64748B;font-size:0.85rem">
+            <div style="color:#8A94A6;font-size:0.85rem">
                 Fill in the order details on the left and click<br>
-                <b style="color:#F97316">Predict Order Status</b> to see results
+                <b style="color:#F8BE14">Predict Order Status</b> to see results
             </div>
         </div>""", unsafe_allow_html=True)
 
 st.markdown('<hr class="dash-divider">', unsafe_allow_html=True)
 
-# ── Feature importance ────────────────────────────────────────
 section("Feature Importance (Random Forest)")
 fi_df = pd.DataFrame({
     "Feature":    ["Category","Qty","Amount","Fulfilment","Month","Order_Value"],
@@ -173,10 +166,10 @@ fig_fi = go.Figure(go.Bar(
     x=fi_df["Importance"], y=fi_df["Feature"],
     orientation="h",
     marker=dict(color=fi_df["Importance"],
-                colorscale=[[0,"#1E3A5F"],[1,"#F97316"]],
+                colorscale=[[0,"#2E3A4E"],[1,"#F8BE14"]],
                 line=dict(color="rgba(0,0,0,0)")),
     text=fi_df["Importance"].map(lambda x: f"{x:.3f}"),
-    textposition="outside", textfont=dict(color="#94A3B8", size=11),
+    textposition="outside", textfont=dict(color="#8A94A6", size=11),
 ))
 fig_fi.update_layout(**PLOTLY_LAYOUT, height=240,
                      xaxis_tickformat=".3f")
