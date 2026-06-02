@@ -30,6 +30,8 @@ The app will open at http://localhost:8501
 - `meesho Orders Aug.csv`
 - `meesho ForwardReports.csv`
 - `Amazon Sale Report.csv`
-- `E-Commerce Shopping Behavior Survey (Responses) - Form responses 1.csv`
+- `E-Commerce Shopping Behavior Survey (Responses) - Form responses 1.cs
+
+https://project-sdbcuwmjrbqrwhycqxthwv.streamlit.app/
 
 ## Academic Year: 2025–26
